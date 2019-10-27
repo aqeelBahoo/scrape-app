@@ -1,0 +1,22 @@
+<main class="container-fluid">
+  <div v-if="isRequestPending" class="loader">
+    <span class="fa fa-spinner fa-spin "></span>
+  </div>
+  <div v-on:click="router.push({name: 'AdminSearch'})" class="home">
+    <span class="fas fa-home"></span>
+  </div>
+  <div v-if="!isRequestPending" class="row">
+    <div class="col-sm-6 ">
+      <h2 class="users">USERS</h2>
+      <ul class="list-group m-b-20">
+        <li v-for="(user , index) in users" class="list-group-item d-flex justify-content-between align-items-center">
+          {{user.email}}
+          <span class="badge badge-pill" :disabled="isDeleteReqPending === index"  v-on:click="deleteUser(user, index)">
+            <span v-if="isDeleteReqPending !== index" class="fas fa-trash-alt"></span>
+            <span v-if="isDeleteReqPending === index" class="fa fa-spinner fa-spin loader font-s-11"></span>
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</main>

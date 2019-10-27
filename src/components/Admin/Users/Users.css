@@ -1,0 +1,27 @@
+.home {
+  position: absolute;
+  top: 70px;
+  cursor: pointer;
+  color: white;
+  left: 25px;
+}
+
+.badge {
+  background-color: #77ac41;
+  color: white;
+  padding: 7px;
+  cursor: pointer;
+}
+
+.users {
+  margin-left: 8px;
+  color: white;
+}
+
+.m-b {
+  margin-bottom: 20px;
+}
+
+.font-s-11 {
+  font-size: 11px;
+}

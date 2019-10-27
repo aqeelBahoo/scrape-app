@@ -1,0 +1,107 @@
+<main role="main" class="container">
+  <div v-if="isReqPending" class="loader">
+    <span class="fa fa-spinner fa-spin "></span>
+  </div>
+  <div v-if="!isReqPending">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col mx-3 mb-3" style="color: rgb(90, 83, 83);">
+            <span>
+              <h4>Items </h4>
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col list-group mx-3">
+            <div v-for="(item, index) in lists" :key="index" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1" style="cursor: pointer" v-on:click="setItemInModal(index)" data-toggle="modal"
+                  data-target="#itemDialog">{{item.list.name}}</h5>
+                <small>{{item.list.site}}</small>
+              </div>
+              <span v-if="item.list.description">
+                <p class="mb-1">{{item.list.description.substring(0, 150) + '...'}}</p>
+              </span>
+              <small>Rs.{{item.list.price}}</small>
+              <button :disabled="loaderIndex === index" class="btn btn-success" v-on:click="refresh(item,index)" style="float: right">
+                <span v-if="loaderIndex === index" class="fa fa-spinner fa-spin"></span>
+                Refresh</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!--open item in modals-->
+  <div class="modal fade" id="itemDialog" tabindex="-1" role="dialog" aria-labelledby="itemDialogLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="itemDialogLabel">{{item.name}} </h5> <span style="line-height: 2;margin-left: 12px;">
+            ({{ item.site}})</span>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-2">
+              <img :src="item.image" width="150">
+              <a class="btn btn-primary btn-sm mt-4 ml-3" :href="item.uri" role="button" target="_blank">Link to
+                product</a>
+            </div>
+            <div class="col ml-4">
+              <table v-if="item.matchDetails" class="table desc">
+                <thead>
+                  <th scope="col"></th>
+                  <th scope="col">Search Result</th>
+                  <th scope="col"></th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Name</th>
+                    <td>{{item.name}}</td>
+                    <td v-if="item.matchDetails.isNameMatch" class="match-text match">Match</td>
+                    <td v-if="!item.matchDetails.isNameMatch" class="match-text unmatch">Unmatch</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Brand</th>
+                    <td>{{item.brand}}</td>
+                    <td v-if="item.matchDetails.isBrandMatch" class="match-text match">Match</td>
+                    <td v-if="!item.matchDetails.isBrandMatch" class="match-text unmatch">Unmatch</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Category</th>
+                    <td>{{item.category}}</td>
+                    <td v-if="item.matchDetails.isCategroryMatch" class="match-text match">Match</td>
+                    <td v-if="!item.matchDetails.isCategroryMatch" class="match-text unmatch">Unmatch</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Price</th>
+                    <td>{{item.price}}</td>
+                    <td v-if="item.matchDetails.isPriceMatch" class="match-text match">Match</td>
+                    <td v-if="!item.matchDetails.isPriceMatch" class="match-text unmatch">Unmatch</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Description</th>
+                    <td>{{item.description}}</td>
+                    <td v-if="item.matchDetails.isDescriptionMatch" class="match-text match">Match</td>
+                    <td v-if="!item.matchDetails.isDescriptionMatch" class="match-text unmatch">Unmatch</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Matched Score</th>
+                    <td>{{item.matchPercentage}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>

@@ -1,0 +1,91 @@
+<main role="main" class="container">
+  <div class="card">
+    <div class="card-body">
+      <div v-if="selectedSite === '3'" class="alert alert-warning" role="alert">
+        QnE site only allows you to either search category or search term!
+      </div>
+      <div v-if="selectedSite === '4'" class="alert alert-warning" role="alert">
+        Yayvo site only allows you to either search category or search term!
+      </div>
+      <div v-if="selectedSite === '5'" class="alert alert-warning" role="alert">
+        Hum Mart site only allows you to either search category or search term!
+      </div>
+      <div v-if="selectedSite === '0'" class="alert alert-warning" role="alert">
+        QnE, Yayvo, Hum Mart sites only allows you to search term!
+      </div>
+      <div class="row my-4">
+        <div v-if="selectedSite === '0'" class="form col-3">
+          <div v-if="true" class="form-group">
+            <div class="justify-content-center">
+              mycart
+              <select class="form-control" v-model="myCartValue">
+                <option v-for="(category, index) in allCategories.myCartPk" :key="index" :value="category.value">{{category.name}}</option>
+              </select>
+            </div>
+            <div class="justify-content-center">
+              daraz
+              <select class="form-control" v-model="darazValue">
+                <option v-for="(category, index) in allCategories.daraz" :key="index" :value="category.value">{{category.name}}</option>
+              </select>
+            </div>
+            <div class="justify-content-center">
+              TAZAMART
+              <select class="form-control" v-model="tazaMartValue">
+                <option v-for="(category, index) in allCategories.tazaMart" :key="index" :value="category.value">{{category.name}}</option>
+              </select>
+            </div>
+            <!-- <div class="justify-content-center">
+              Yayvo
+              <select class="form-control" v-model="yayvoValue">
+                <option v-for="(category, index) in allCategories.yayvo" :key="index" :value="category.value">{{category.name}}</option>
+              </select>
+            </div> -->
+            <!-- <div class="justify-content-center">
+              Hummart
+              <select class="form-control" v-model="hummartValue">
+                <option v-for="(category, index) in allCategories.humMart" :key="index" :value="category.value">{{category.name}}</option>
+              </select>
+            </div> -->
+
+          </div>
+        </div>
+        <div class="form col-6" v-bind:class="{ 'offset-md-3': selectedSite !== '0' }">
+          <div class="form-group mb-5">
+            <input type="text" class="form-control" placeholder="search term" v-model="query">
+          </div>
+          <div class="form-group mb-5">
+            <input type="text" class="form-control" placeholder="name" v-model="name">
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Description" v-model="description">
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Brand" v-model="brand">
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Price" v-model="price">
+          </div>
+          <div class="form-group">
+            <select class="form-control" v-model="selectedSite" v-on:change="onSiteChange(selectedSite)">
+              <option value="0" selected>Multiple site search</option>
+              <option value="1">daraz</option>
+              <option value="2">mycart</option>
+              <option value="3">QnE</option>
+              <option value="4">Yayvo</option>
+              <option value="5">Hum Mart</option>
+              <option value="6">TAZAMART</option>
+            </select>
+          </div>
+          <div v-if="selectedSite !== '0'" class="form-group">
+            <select class="form-control" v-model="selectedCategory">
+              <option v-for="(category, index) in categories" :key="index" :value="category && category.value">{{category && category.name}}</option>
+            </select>
+          </div>
+          <button v-on:click="search()" :disabled="isReqPending" class="btn btn-success" style="width: 200px; margin-left: 10rem;">
+            <span v-if="isReqPending" class="fa fa-spinner fa-spin"></span>
+            Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

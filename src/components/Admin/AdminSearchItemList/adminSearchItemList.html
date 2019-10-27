@@ -1,0 +1,135 @@
+<main role="main" class="container">
+  <div>
+    <button class="btn btn-info mb-1" v-on:click="router.go(-1)">
+      Back to Search
+    </button>
+    <button class="btn mb-1 history-btn" v-on:click="router.push({ name: 'AdminHistory' })">
+      <span class="fas fa-history"></span> History
+    </button>
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col mx-3 mb-3" style="color: rgb(90, 83, 83);">
+            <span>
+              <h4>Results </h4>
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col list-group mx-3">
+            <div v-for="(result, index) in searchResults" :key="index" class="list-group-item list-group-item-action flex-column align-items-start">
+              <span v-if="result">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1" v-on:click="setModalValue(index)" data-toggle="modal" data-target="#itemDialog" style="cursor: pointer">{{result.name}}</h5>
+                  <small>{{result.site}}</small>
+                </div>
+                <span v-if="result.description">
+                  <p class="mb-1">{{result.description.substring(0, 150) + '...'}}</p>
+                </span>
+                <small>Rs.{{result.price}}</small>
+                <button :disabled="loaderIndex === index" class="btn btn-success" v-on:click="getUsers(index)" style="float: right">
+                  <span v-if="loaderIndex === index" class="fa fa-spinner fa-spin"></span>
+                  Assign To Users</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--open item in modals-->
+  <div class="modal fade" id="itemDialog" tabindex="-1" role="dialog" aria-labelledby="itemDialogLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="itemDialogLabel">{{modal.name}} </h5> <span style="line-height: 2;margin-left: 12px;">
+          ({{ modal.site}})</span>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-2">
+              <img :src="modal.image" width="150">
+              <a class="btn btn-primary btn-sm mt-4 ml-3" :href="modal.uri" role="button" target="_blank">Link to product</a>
+            </div>
+            <div class="col ml-4">
+              <table v-if="modal.matchDetails" class="table desc">
+                <thead>
+                  <th scope="col"></th>
+                  <th scope="col">Search Result</th>
+                  <th scope="col"></th>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Name</th>
+                    <td>{{modal.name}}</td>
+                    <td v-if="modal.matchDetails.isNameMatch" class="match-text match">Match</td>
+                    <td v-if="!modal.matchDetails.isNameMatch" class="match-text unmatch">Unmatch</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Brand</th>
+                    <td>{{modal.brand}}</td>
+                    <td v-if="modal.matchDetails.isBrandMatch" class="match-text match">Match</td>
+                    <td v-if="!modal.matchDetails.isBrandMatch" class="match-text unmatch">Unmatch</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Category</th>
+                    <td>{{modal.category}}</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Price</th>
+                    <td>{{modal.price}}</td>
+                    <td v-if="modal.matchDetails.isPriceMatch" class="match-text match">Match</td>
+                    <td v-if="!modal.matchDetails.isPriceMatch" class="match-text unmatch">Unmatch</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Description</th>
+                    <td>{{modal.description}}</td>
+                    <td v-if="modal.matchDetails.isDescriptionMatch" class="match-text match">Match</td>
+                    <td v-if="!modal.matchDetails.isDescriptionMatch" class="match-text unmatch">Unmatch</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Matched Score</th>
+                    <td>{{modal.matchPercentage}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!--'item assign to users' dialog-->
+  <div class="modal fade" id="assignItemDialog" tabindex="-1" role="dialog" aria-labelledby="itemsDialogLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="itemsDialogLabel">Users</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div v-for="(result, index) in allUsers" :key="index">
+            <input type="checkbox" :id="result._id" :value="result._id" v-model="selectedUsersId">
+            <label :for="result._id">{{result.name}}</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" :disabled="isAssignToUserReqPending || selectedUsersId.length === 0" class="btn btn-primary" v-on:click="assignItemToUser()">
+            <span v-if="isAssignToUserReqPending" class="fa fa-spinner fa-spin"></span>
+            Assign</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>

@@ -1,0 +1,17 @@
+.loader {
+  text-align: center;
+  font-size: 60px;
+  color: white;
+}
+
+.match-text {
+  font-style: italic;
+}
+
+.match {
+  color: green
+}
+
+.unmatch {
+  color: red
+}

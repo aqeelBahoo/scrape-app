@@ -1,0 +1,28 @@
+# SSH_PRIVATE_KEY needs to be configured in Gitlab
+# https://gitlab.com/talha.khatri.3/scrape-app/settings/ci_cd
+
+before_script:
+  # configure the Private Key on the machine so it can deploy.
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$SSH_PRIVATE_KEY")
+  - mkdir -p ~/.ssh
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+
+stages:
+  - test
+  - deploy
+
+deploy_prod:
+  stage: deploy
+  script:
+    - echo "Deploy to production server"
+    - echo "$SSH_PRIVATE_KEY"
+    - git remote set-url --push origin ssh://ubuntu@ec2-18-130-205-163.eu-west-2.compute.amazonaws.com:/home/ubuntu/crawler.git
+    - git push -f origin HEAD:master
+  environment:
+    name: production
+    url: http://18.130.205.163:8080/
+  only:
+    - master
+
